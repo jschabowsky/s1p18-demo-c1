@@ -22,6 +22,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.solace.demo.utahdabc.datamodel.Product;
 
+import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.springframework.cloud.stream.test.matcher.MessageQueueMatcher.receivesPayloadThat;
@@ -47,7 +48,7 @@ public abstract class UtahPricelistParserProcessorIntegrationTests {
 	@Autowired
 	protected MessageCollector collector;
 	
-	private static final String TEST_RESULT = "{\"name\":null,\"div_code\":null,\"dept_code\":null,\"class_code\":\"AWA\",\"size\":0,\"csc\":0,\"price\":0.0,\"lcboPrice\":0.0,\"status\":null,\"tags\":null,\"spa\":null}";
+	private static final String RESULT_SUBSTRING = "{\"name\":null,\"div_code\":null,\"dept_code\":null,\"class_code\":\"AWA\",\"size\":0,\"csc\":0,\"price\":0.0,\"lcboPrice\":0.0,\"status\":null,\"tags\":null,\"_timestamp\":\"";
 
 	/**
 	 * Validates that the module loads with default properties.
@@ -59,7 +60,7 @@ public abstract class UtahPricelistParserProcessorIntegrationTests {
 			p.setClass_code("AWA");
 			
 			channels.input().send(new GenericMessage<Product>(p));
-			assertThat(collector.forChannel(channels.output()), receivesPayloadThat(is(TEST_RESULT)));
+			assertThat(collector.forChannel(channels.output()), receivesPayloadThat(startsWith(RESULT_SUBSTRING)));
 		}
 
 		@Test

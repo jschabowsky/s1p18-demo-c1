@@ -25,6 +25,7 @@ import com.solace.demo.utahdabc.datamodel.Product;
 import com.solace.demo.utahdabc.datamodel.ProductInventoryData;
 import com.solace.demo.utahdabc.datamodel.StoreInventory;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.springframework.cloud.stream.test.matcher.MessageQueueMatcher.receivesPayloadThat;
@@ -49,11 +50,11 @@ public abstract class UtahInventoryGeocoderProcessorIntegrationTests {
 	 * Validates that the module loads with default properties.
 	 */
 	public static class UsingNothingIntegrationTests extends UtahInventoryGeocoderProcessorIntegrationTests {
-		private static final String TEST_RESULT = "{\"warehouseInventoryQty\":0,\"warehouseOnOrderQty\":0,\"productStatus\":null,\"product\":{\"name\":null,\"div_code\":null,\"dept_code\":null,\"class_code\":null,\"size\":0,\"csc\":4006,\"price\":0.0,\"lcboPrice\":0.0,\"status\":null,\"tags\":null,\"spa\":null},\"storeInventory\":{\"storeID\":\"0039\",\"storeName\":null,\"productQty\":0,\"storeAddress\":\"1255 West North Temple\",\"storeGeoLat\":40.77105194863543,\"storeGeoLng\":-111.92751735448837,\"storeCity\":\"Salt Lake City\",\"storePhone\":null}}";
+		private static final String RESULT_SUBSTRING = "\"storeAddress\":\"1255 West North Temple\",\"storeGeoLat\":40.77105194863543,\"storeGeoLng\":-111.92751735448837,\"storeCity\":\"Salt Lake City\"";
 		
 		public static void doGenericProcessorTest(Processor channels, MessageCollector collector, ProductInventoryData pid, String testResult) {
 			channels.input().send(new GenericMessage<ProductInventoryData>(pid));
-			assertThat(collector.forChannel(channels.output()), receivesPayloadThat(is(testResult)));
+			assertThat(collector.forChannel(channels.output()), receivesPayloadThat(containsString(testResult)));
 		}
 		
 		@Test
@@ -71,13 +72,13 @@ public abstract class UtahInventoryGeocoderProcessorIntegrationTests {
 			pid.setStoreInventory(storeInventory);
 			pid.setProduct(p);
 			
-			doGenericProcessorTest(channels, collector, pid, TEST_RESULT);
+			doGenericProcessorTest(channels, collector, pid, RESULT_SUBSTRING);
 		}
 	}
 
 	@SpringBootTest("utah.inventory.geocoder.lookupState=NY")
 	public static class UsingPropsIntegrationTests extends UtahInventoryGeocoderProcessorIntegrationTests {
-		private static final String TEST_RESULT = "{\"warehouseInventoryQty\":0,\"warehouseOnOrderQty\":0,\"productStatus\":null,\"product\":{\"name\":null,\"div_code\":null,\"dept_code\":null,\"class_code\":null,\"size\":0,\"csc\":4006,\"price\":0.0,\"lcboPrice\":0.0,\"status\":null,\"tags\":null,\"spa\":null},\"storeInventory\":{\"storeID\":\"0099\",\"storeName\":null,\"productQty\":0,\"storeAddress\":\"255 Park Ave S\",\"storeGeoLat\":40.738602448353575,\"storeGeoLng\":-73.98742407560349,\"storeCity\":\"New York City\",\"storePhone\":null}}";
+		private static final String RESULT_SUBSTRING = "\"storeAddress\":\"255 Park Ave S\",\"storeGeoLat\":40.738602448353575,\"storeGeoLng\":-73.98742407560349,\"storeCity\":\"New York City\"";
 		
 		@Test
 		public void test() {
@@ -93,7 +94,7 @@ public abstract class UtahInventoryGeocoderProcessorIntegrationTests {
 			pid.setStoreInventory(storeInventory);
 			pid.setProduct(p);
 			
-			UsingNothingIntegrationTests.doGenericProcessorTest(channels, collector, pid, TEST_RESULT);
+			UsingNothingIntegrationTests.doGenericProcessorTest(channels, collector, pid, RESULT_SUBSTRING);
 		}
 	}
 
