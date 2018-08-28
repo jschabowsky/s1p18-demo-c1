@@ -1,5 +1,6 @@
 /target/
 /apps/
+/bin/
 !.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
@@ -24,3 +25,7 @@
 /dist/
 /nbdist/
 /.nb-gradle/
+
+### SCS / Script-generated tmp files ###
+.tmp
+.bak
