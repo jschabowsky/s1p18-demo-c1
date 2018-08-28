@@ -49,9 +49,10 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.schabowsky</groupId>
+			<groupId>com.solace.demo</groupId>
 			<artifactId>UtahDABC-Datamodel</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
+			<scope>compile</scope>
 		</dependency>
 		
 	</dependencies>
