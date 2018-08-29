@@ -35,7 +35,7 @@ import com.solace.demo.utahdabc.datamodel.ProductInventoryData;
 import com.solace.demo.utahdabc.datamodel.StoreInventory;
 
 /**
- * SCS processor - geocoder.  Converts an address to lat/long, or the reverse.
+ * SCS processor - geocoder.  Looks up an address (could be cached) associated with a product in a store, and sets lat/long
  *
  * @author Solace Corp
  */
