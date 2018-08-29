@@ -23,14 +23,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.solace.demo.utahdabc.datamodel.Product;
 
 import static org.hamcrest.CoreMatchers.startsWith;
-import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.springframework.cloud.stream.test.matcher.MessageQueueMatcher.receivesPayloadThat;
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Integration Tests for the lookup Processor.

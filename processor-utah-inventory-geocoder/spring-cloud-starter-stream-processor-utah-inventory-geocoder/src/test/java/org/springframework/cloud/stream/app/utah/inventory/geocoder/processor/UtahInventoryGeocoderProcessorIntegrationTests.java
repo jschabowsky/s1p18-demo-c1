@@ -26,7 +26,6 @@ import com.solace.demo.utahdabc.datamodel.ProductInventoryData;
 import com.solace.demo.utahdabc.datamodel.StoreInventory;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.springframework.cloud.stream.test.matcher.MessageQueueMatcher.receivesPayloadThat;
 
