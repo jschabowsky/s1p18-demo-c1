@@ -94,20 +94,20 @@ public class UtahInventoryGeocoderProcessorConfiguration {
 			}
 
 			if (results != null) {
-				storeInventory.setStoreGeoLat(results[0].geometry.location.lat);
-				storeInventory.setStoreGeoLng(results[0].geometry.location.lng);
+				storeInventory.getLocation().setLat(results[0].geometry.location.lat);
+				storeInventory.getLocation().setLon(results[0].geometry.location.lng);
 				
-				log.info(address + " Lat/Lng: " + storeInventory.getStoreGeoLat() + " / " + storeInventory.getStoreGeoLng());			
+				log.info(address + " Lat/Lng: " + storeInventory.getLocation().getLat() + " / " + storeInventory.getLocation().getLon());			
 			}
 			
 			redisOps.opsForGeo().add(properties.getLookupState(), 
 					new RedisGeoCommands.GeoLocation<String>(storeId, 
-							new Point(storeInventory.getStoreGeoLng(), storeInventory.getStoreGeoLat())));
+							new Point(storeInventory.getLocation().getLon(), storeInventory.getLocation().getLat())));
 
 		} else {
 			Point pt = positions.get(0);
-			storeInventory.setStoreGeoLng(pt.getX());
-			storeInventory.setStoreGeoLat(pt.getY());
+			storeInventory.getLocation().setLon(pt.getX());
+			storeInventory.getLocation().setLat(pt.getY());
 		}
 		
 		return pid;
