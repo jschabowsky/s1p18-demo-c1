@@ -11,6 +11,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.StringJoiner;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -76,6 +77,12 @@ public class UtahPricelistLoaderProcessorConfiguration {
 						p.setPrice(NumberFormat.getCurrencyInstance(Locale.US).parse(tds.get(6).text()).doubleValue());
 						p.setStatus(tds.get(7).text());
 						p.setSPA(tds.get(8).text());
+
+						StringJoiner sj = new StringJoiner(" ");
+						p.setTags(sj.add(p.getName())
+								.add(Integer.toString(p.getSize()))
+								.toString());
+						
 						productList.add(p);
 						log.info("Added product: " + p.getName());
 					}

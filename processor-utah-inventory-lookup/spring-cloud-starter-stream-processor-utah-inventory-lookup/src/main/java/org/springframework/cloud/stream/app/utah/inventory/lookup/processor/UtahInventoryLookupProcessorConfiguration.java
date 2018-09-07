@@ -5,8 +5,6 @@
  */
 package org.springframework.cloud.stream.app.utah.inventory.lookup.processor;
 
-import java.util.StringJoiner;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -106,13 +104,6 @@ public class UtahInventoryLookupProcessorConfiguration {
 				storeInv.setStoreCity(data.get(4).text());
 				storeInv.setStorePhone(data.get(5).text());
 				prodInv.setStoreInventory(storeInv);
-
-				StringJoiner sj = new StringJoiner(" ");
-				p.setTags(sj.add(p.getName())
-						.add(p.getClass_code())
-						.add(Integer.toString(p.getSize()))
-						.add(prodInv.getProductStatus())
-						.add(storeInv.getStoreName()).toString());
 				
 				// Track the store with the highest inventory for this product
 				if (storeInv.getProductQty() > topInventoryStore.getProductQty())
