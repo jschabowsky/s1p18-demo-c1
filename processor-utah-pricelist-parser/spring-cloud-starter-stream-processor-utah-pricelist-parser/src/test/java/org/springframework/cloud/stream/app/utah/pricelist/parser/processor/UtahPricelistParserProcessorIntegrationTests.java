@@ -42,7 +42,7 @@ public abstract class UtahPricelistParserProcessorIntegrationTests {
 	@Autowired
 	protected MessageCollector collector;
 	
-	private static final String RESULT_SUBSTRING = "{\"name\":null,\"div_code\":null,\"dept_code\":null,\"class_code\":\"AWA\",\"size\":0,\"csc\":0,\"price\":0.0,\"lcboPrice\":0.0,\"status\":null,\"tags\":null,\"_timestamp\":\"";
+	private static final String RESULT_SUBSTRING = "{\"name\":null,\"div_code\":null,\"dept_code\":null,\"class_code\":\"AWA\",\"size\":0,\"csc\":0,\"price\":0.0,\"lcboPrice\":0.0,\"status\":null,\"tags\":null,\"creationTimestamp\":";
 
 	/**
 	 * Validates that the module loads with default properties.
