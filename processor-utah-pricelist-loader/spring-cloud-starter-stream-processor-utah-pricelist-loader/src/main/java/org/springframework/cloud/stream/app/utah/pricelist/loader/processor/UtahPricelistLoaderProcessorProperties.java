@@ -15,14 +15,24 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("utah.pricelist.loader")
 public class UtahPricelistLoaderProcessorProperties {
 	public static final String DEFAULT_PROCESSOR_URL = "https://webapps2.abc.utah.gov/Production/OnlinePriceList/DisplayPriceList.aspx";
+	public static final String DEFAULT_PUBLISH_TOPIC = "product/utah/all";
 	
 	private String processorUrl = DEFAULT_PROCESSOR_URL;
-
+	private String publishTopic = DEFAULT_PUBLISH_TOPIC;
+	
 	public void setProcessorUrl(String processorUrl) {
 		this.processorUrl = processorUrl;
 	}
 
 	public String getProcessorUrl() {
 		return processorUrl;
+	}
+
+	public String getPublishTopic() {
+		return publishTopic;
+	}
+
+	public void setPublishTopic(String publishTopic) {
+		this.publishTopic = publishTopic;
 	}
 }

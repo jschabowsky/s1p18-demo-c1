@@ -8,8 +8,6 @@ package org.springframework.cloud.stream.app.utah.pricelist.loader.processor;
 import java.text.NumberFormat;
 import java.text.ParseException;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.StringJoiner;
 
@@ -24,10 +22,11 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.Input;
 import org.springframework.cloud.stream.messaging.Processor;
-import org.springframework.cloud.stream.reactive.FluxSender;
+
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.cloud.stream.annotation.Output;
 import org.springframework.cloud.stream.annotation.StreamListener;
-
+import org.springframework.cloud.stream.binding.BinderAwareChannelResolver;
 import org.springframework.web.client.RestTemplate;
 import com.solace.demo.utahdabc.datamodel.Product;
 
@@ -44,18 +43,20 @@ import reactor.core.publisher.Flux;
 public class UtahPricelistLoaderProcessorConfiguration {
 	@Autowired
 	private UtahPricelistLoaderProcessorProperties properties;
-    
+
+	@Autowired
+    private BinderAwareChannelResolver resolver;
+	
     private static final Logger log = LoggerFactory.getLogger(UtahPricelistLoaderProcessorConfiguration.class);
-    
+        
 	@StreamListener
-	public void process(@Input(Processor.INPUT) Flux<String> input, @Output(Processor.OUTPUT) FluxSender output) throws ParseException {
-		for(Product p : getProductList(properties.getProcessorUrl())) {
-			output.send(input.map(x -> p));
-		}
+	@Output(Processor.OUTPUT)
+	public Flux<Integer> process(@Input(Processor.INPUT) Flux<String> input) {
+		return input.map(x -> publishProducts(properties.getProcessorUrl(), properties.getPublishTopic()));
 	}
 	
-	private List<Product> getProductList(String url) {
-		List<Product> productList = new ArrayList<Product>();
+	private Integer publishProducts(String url, String publishTopic) {
+		int productCount = 0;
 		RestTemplate restTemplate = new RestTemplate();
 		
 		try {
@@ -83,7 +84,8 @@ public class UtahPricelistLoaderProcessorConfiguration {
 								.add(Integer.toString(p.getSize()))
 								.toString());
 						
-						productList.add(p);
+						resolver.resolveDestination(publishTopic).send(MessageBuilder.withPayload(p).build());
+						productCount++;
 						log.info("Added product: " + p.getName());
 					}
 				}
@@ -92,6 +94,6 @@ public class UtahPricelistLoaderProcessorConfiguration {
 			log.error(pe.toString());
 		}
 		
-		return productList;
+		return productCount;
 	}	
 }

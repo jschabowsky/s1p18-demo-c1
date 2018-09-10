@@ -16,7 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import org.springframework.cloud.stream.messaging.Processor;
 import org.springframework.cloud.stream.test.binder.MessageCollector;
-
+import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.test.annotation.DirtiesContext;
 
@@ -26,6 +26,9 @@ import static org.hamcrest.CoreMatchers.startsWith;
 
 import static org.junit.Assert.assertThat;
 import static org.springframework.cloud.stream.test.matcher.MessageQueueMatcher.receivesPayloadThat;
+
+import java.util.Iterator;
+import java.util.ListIterator;
 
 /**
  * Integration Tests for the lookup Processor.
@@ -43,7 +46,7 @@ public abstract class UtahPricelistLoaderProcessorIntegrationTests {
 	@Autowired
 	protected MessageCollector collector;
 	
-	private static final String RESULT_SUBSTRING = "{\"name\":\"$1.00 WINE SAMPLES 750ml\",\"div_code\":\"Y\",\"dept_code\":\"YS\",\"class_code\":\"YSE\",\"size\":750,\"csc\":995321,\"price\":1.09,\"lcboPrice\":0.0,\"status\":\"L\",\"tags\":null,\"_timestamp\":\"";
+	private static final String RESULT_SUBSTRING = "15";
 
 	/**
 	 * Validates that the module loads with default properties.
@@ -54,13 +57,6 @@ public abstract class UtahPricelistLoaderProcessorIntegrationTests {
 			assertThat(collector.forChannel(channels.output()), receivesPayloadThat(startsWith(RESULT_SUBSTRING)));
 		}
 		
-		@Test
-		public void test() {
-			// Deferring usage of this until we can easily specify a local test file for a no props UT 
-			
-			
-			//doGenericProcessorTest(channels, collector);
-		}		
 	}
     
 	@SpringBootTest("utah.pricelist.loader.processorUrl=http://127.0.0.1:8888/test.html")
