@@ -75,9 +75,9 @@ public abstract class UtahInventoryGeocoderProcessorIntegrationTests {
 		}
 	}
 
-	@SpringBootTest("utah.inventory.geocoder.lookupState=NY")
+	@SpringBootTest("utah.inventory.geocoder.googleMapsApiKey=<INSERT_API_KEY_HERE>")
 	public static class UsingPropsIntegrationTests extends UtahInventoryGeocoderProcessorIntegrationTests {
-		private static final String RESULT_SUBSTRING = "\"storeAddress\":\"255 Park Ave S\",\"storeGeoLat\":40.738602448353575,\"storeGeoLng\":-73.98742407560349,\"storeCity\":\"New York City\"";
+		private static final String RESULT_SUBSTRING = "{\"warehouseInventoryQty\":0,\"warehouseOnOrderQty\":0,\"productStatus\":null,\"product\":{\"name\":null,\"div_code\":null,\"dept_code\":null,\"class_code\":null,\"size\":0,\"csc\":4006,\"price\":0.0,\"lcboPrice\":0.0,\"status\":null,\"tags\":null,\"creationTimestamp\":";
 		
 		@Test
 		public void test() {

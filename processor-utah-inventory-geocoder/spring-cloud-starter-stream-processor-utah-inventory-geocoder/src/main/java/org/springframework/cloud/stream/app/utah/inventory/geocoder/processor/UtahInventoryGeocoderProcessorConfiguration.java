@@ -42,10 +42,14 @@ import com.solace.demo.utahdabc.datamodel.StoreInventory;
 @EnableBinding(Processor.class)
 @EnableConfigurationProperties(UtahInventoryGeocoderProcessorProperties.class)
 public class UtahInventoryGeocoderProcessorConfiguration {
+    private static final Logger log = LoggerFactory.getLogger(UtahInventoryGeocoderProcessorConfiguration.class);
+    
+	private static final String GEO_LOOKUP_STATE_CACHE_KEY = "UT";
+    private static final String STORES_CACHE_KEY = "UT_STORES";
+    
 	@Autowired
 	private UtahInventoryGeocoderProcessorProperties properties;
 
-    private static final Logger log = LoggerFactory.getLogger(UtahInventoryGeocoderProcessorConfiguration.class);
   
     // Google Maps Geocoder API Context
     private GeoApiContext geoContext;
@@ -68,13 +72,13 @@ public class UtahInventoryGeocoderProcessorConfiguration {
 			return null;
 		}
 
-		List<Point> positions = redisOps.opsForGeo().position(properties.getLookupState(), storeId);
+		List<Point> positions = redisOps.opsForGeo().position(GEO_LOOKUP_STATE_CACHE_KEY, storeId);
 		if (positions.isEmpty() || positions.get(0) == null) {
 			String partialAddress = storeInventory.getStoreAddress();
 			String city = storeInventory.getStoreCity();
 
 			StringJoiner sj = new StringJoiner(",");
-			String address = sj.add(partialAddress).add(city).add(properties.getLookupState()).toString();
+			String address = sj.add(partialAddress).add(city).add(GEO_LOOKUP_STATE_CACHE_KEY).toString();
 			
 			GeocodingResult[] results = null;
 			try {
@@ -100,9 +104,11 @@ public class UtahInventoryGeocoderProcessorConfiguration {
 				log.info(address + " Lat/Lng: " + storeInventory.getLocation().getLat() + " / " + storeInventory.getLocation().getLon());			
 			}
 			
-			redisOps.opsForGeo().add(properties.getLookupState(), 
+			redisOps.opsForGeo().add(GEO_LOOKUP_STATE_CACHE_KEY, 
 					new RedisGeoCommands.GeoLocation<String>(storeId, 
 							new Point(storeInventory.getLocation().getLon(), storeInventory.getLocation().getLat())));
+			
+			redisOps.opsForHash().put(STORES_CACHE_KEY, storeId, address);
 
 		} else {
 			Point pt = positions.get(0);
