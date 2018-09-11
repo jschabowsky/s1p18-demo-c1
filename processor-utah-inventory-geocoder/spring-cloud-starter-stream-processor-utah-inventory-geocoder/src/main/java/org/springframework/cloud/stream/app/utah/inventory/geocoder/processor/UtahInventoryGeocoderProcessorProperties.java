@@ -14,11 +14,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @ConfigurationProperties("utah.inventory.geocoder")
 public class UtahInventoryGeocoderProcessorProperties {
-	public static final String DEFAULT_LOOKUP_STATE = "UT";
-		
 	private String googleMapsApiKey;
-	
-	private String lookupState = DEFAULT_LOOKUP_STATE;
 
 	public String getGoogleMapsApiKey() {
 		return googleMapsApiKey;
@@ -27,14 +23,4 @@ public class UtahInventoryGeocoderProcessorProperties {
 	public void setGoogleMapsApiKey(String googleMapsApiKey) {
 		this.googleMapsApiKey = googleMapsApiKey;
 	}
-
-	public String getLookupState() {
-		return lookupState;
-	}
-
-	public void setLookupState(String lookupState) {
-		this.lookupState = lookupState;
-	}
-	
-	
 }
