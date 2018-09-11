@@ -16,7 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import org.springframework.cloud.stream.messaging.Processor;
 import org.springframework.cloud.stream.test.binder.MessageCollector;
-import org.springframework.messaging.Message;
+
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.test.annotation.DirtiesContext;
 
@@ -26,9 +26,6 @@ import static org.hamcrest.CoreMatchers.startsWith;
 
 import static org.junit.Assert.assertThat;
 import static org.springframework.cloud.stream.test.matcher.MessageQueueMatcher.receivesPayloadThat;
-
-import java.util.Iterator;
-import java.util.ListIterator;
 
 /**
  * Integration Tests for the lookup Processor.
