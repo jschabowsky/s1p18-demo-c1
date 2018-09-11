@@ -22,7 +22,12 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.Input;
 import org.springframework.cloud.stream.messaging.Processor;
-
+import org.springframework.context.annotation.Bean;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.GenericToStringSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.cloud.stream.annotation.Output;
 import org.springframework.cloud.stream.annotation.StreamListener;
@@ -47,6 +52,22 @@ public class UtahPricelistLoaderProcessorConfiguration {
 	@Autowired
     private BinderAwareChannelResolver resolver;
 	
+	private static final String PRODUCTS_CACHE_KEY = "UT_PRODUCTS";
+	
+	@Bean
+	public RedisOperations<String, Double> redisTemplate(RedisConnectionFactory rcf) {
+		final RedisTemplate<String, Double> template =  new RedisTemplate<String, Double>();
+		template.setConnectionFactory(rcf);
+		template.setKeySerializer(new StringRedisSerializer());
+		template.setValueSerializer(new GenericToStringSerializer<Double>(Double.class));		
+		template.setHashKeySerializer(new StringRedisSerializer());
+
+		return template;
+	}	
+	
+	@Autowired
+	private RedisOperations<String, Double> redisOps;
+	
     private static final Logger log = LoggerFactory.getLogger(UtahPricelistLoaderProcessorConfiguration.class);
         
 	@StreamListener
@@ -58,7 +79,7 @@ public class UtahPricelistLoaderProcessorConfiguration {
 	private Integer publishProducts(String url, String publishTopic) {
 		int productCount = 0;
 		RestTemplate restTemplate = new RestTemplate();
-		
+				
 		try {
 			String quote = restTemplate.getForObject(url, String.class);
 			Document doc = Jsoup.parse(quote);
@@ -87,6 +108,8 @@ public class UtahPricelistLoaderProcessorConfiguration {
 						resolver.resolveDestination(publishTopic).send(MessageBuilder.withPayload(p).build());
 						productCount++;
 						log.info("Added product: " + p.getName());
+						
+						redisOps.opsForHash().put(PRODUCTS_CACHE_KEY, p.getName(), p.getPrice());
 					}
 				}
 			}
