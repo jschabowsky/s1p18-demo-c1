@@ -6,7 +6,9 @@
 package org.springframework.cloud.stream.app.utah.inventory.geocoder.processor;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.StringJoiner;
 
 import org.slf4j.Logger;
@@ -78,14 +80,14 @@ public class UtahInventoryGeocoderProcessorConfiguration {
 	
 	private ProductInventoryData resolveLatLong(ProductInventoryData pid) {
 		StoreInventory storeInventory = pid.getStoreInventory();
-		String storeId = storeInventory.getStoreID();
+		String storeID = storeInventory.getStoreID();
 		
-		if (storeInventory == null || storeId == null) {
+		if (storeInventory == null || storeID == null) {
 			log.error("Invalid store for product CSC " + pid.getProduct().getCsc());
 			return null;
 		}
 
-		List<Point> positions = redisOps.opsForGeo().position(STATE_GEO_CACHE_KEY, storeId);
+		List<Point> positions = redisOps.opsForGeo().position(STATE_GEO_CACHE_KEY, storeID);
 		if (positions.isEmpty() || positions.get(0) == null) {
 			String partialAddress = storeInventory.getStoreAddress();
 			String city = storeInventory.getStoreCity();
@@ -118,17 +120,25 @@ public class UtahInventoryGeocoderProcessorConfiguration {
 			}
 			
 			redisOps.opsForGeo().add(STATE_GEO_CACHE_KEY, 
-					new RedisGeoCommands.GeoLocation<Object>(storeId, 
+					new RedisGeoCommands.GeoLocation<Object>(storeID, 
 							new Point(storeInventory.getLocation().getLon(), storeInventory.getLocation().getLat())));
 		} else {
 			Point pt = positions.get(0);
 			storeInventory.getLocation().setLon(pt.getX());
 			storeInventory.getLocation().setLat(pt.getY());
 			
-			log.info("Geocache hit for store: " + storeId + " @ " + pid.getStoreInventory().getStoreAddress());
+			log.info("Geocache hit for store: " + storeID + " @ " + pid.getStoreInventory().getStoreAddress());
 		}
 
-		redisOps.opsForHash().put(INVENTORY_CACHE_KEY, storeId, pid);
+		// Cache the store inventory
+		Map<String, ProductInventoryData> storeProducts = 
+				(HashMap<String, ProductInventoryData>)redisOps.opsForHash().get(INVENTORY_CACHE_KEY, storeID);
+		if (storeProducts == null) {
+			storeProducts = new HashMap<String, ProductInventoryData>();
+		}
+			
+		storeProducts.put(pid.getProduct().getName(), pid);
+		redisOps.opsForHash().put(INVENTORY_CACHE_KEY, storeID, storeProducts);
 		
 		return pid;
 	}

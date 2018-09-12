@@ -49,7 +49,7 @@ public abstract class UtahInventoryGeocoderProcessorIntegrationTests {
 	 * Validates that the module loads with default properties.
 	 */
 	public static class UsingNothingIntegrationTests extends UtahInventoryGeocoderProcessorIntegrationTests {
-		private static final String RESULT_SUBSTRING = "\"storeAddress\":\"1255 West North Temple\",\"storeGeoLat\":40.77105194863543,\"storeGeoLng\":-111.92751735448837,\"storeCity\":\"Salt Lake City\"";
+		private static final String RESULT_SUBSTRING = "{\"warehouseInventoryQty\":0,\"warehouseOnOrderQty\":0,\"productStatus\":null,\"product\":{\"name\":null,\"div_code\":null,\"dept_code\":null,\"class_code\":null,\"size\":0,\"csc\":4006,\"price\":0.0,\"lcboPrice\":0.0,\"status\":null,\"tags\":null,\"creationTimestamp\":";
 		
 		public static void doGenericProcessorTest(Processor channels, MessageCollector collector, ProductInventoryData pid, String testResult) {
 			channels.input().send(new GenericMessage<ProductInventoryData>(pid));
@@ -75,7 +75,7 @@ public abstract class UtahInventoryGeocoderProcessorIntegrationTests {
 		}
 	}
 
-	@SpringBootTest("utah.inventory.geocoder.googleMapsApiKey=<INSERT_API_KEY_HERE>")
+	@SpringBootTest("utah.inventory.geocoder.googleMapsApiKey=<API_KEY>")
 	public static class UsingPropsIntegrationTests extends UtahInventoryGeocoderProcessorIntegrationTests {
 		private static final String RESULT_SUBSTRING = "{\"warehouseInventoryQty\":0,\"warehouseOnOrderQty\":0,\"productStatus\":null,\"product\":{\"name\":null,\"div_code\":null,\"dept_code\":null,\"class_code\":null,\"size\":0,\"csc\":4006,\"price\":0.0,\"lcboPrice\":0.0,\"status\":null,\"tags\":null,\"creationTimestamp\":";
 		
