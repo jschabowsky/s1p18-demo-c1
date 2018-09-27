@@ -31,9 +31,8 @@ import com.solace.demo.utahdabc.datamodel.Product;
 
 import reactor.core.publisher.Flux;
 
-
 /**
- * SCS processor - pricelist loader - loads HTML price data from a URL.
+ * See README.adoc
  *
  * @author Solace Corp
  */

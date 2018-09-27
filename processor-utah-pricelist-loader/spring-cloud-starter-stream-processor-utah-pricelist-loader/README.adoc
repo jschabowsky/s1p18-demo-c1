@@ -1,29 +1,36 @@
 //tag::ref-doc[]
-= source-utah-pricelist-loader
+= processor-utah-pricelist-loader
 
+The `utah-pricelist-loader` processor scrapes the HTML product list page from the Utah DABC site, and publishes each product line item individually for downstream processing.
 
 == Input
 
 === Headers
 
-N/A
+* N/A
 
 === Payload
 
-* Any
+* Ignored (trigger message used for loading products / prices on a schedule)
 
 == Output
 
 === Headers
 
-N/A
+* N/A
 
 === Payload
 
-* Any
+* Integer count of products published (1:1 ratio for each trigger).  Note that the actual products are published on the configured publish topic (1:many ratio - typically a very large number of products).  Product info will be of type `com.solace.demo.utahdabc.datamodel.Product`.
 
 == Options
 
+The **$$utah-pricelist-loader$$** $$processor$$ has the following options:
+
+//tag::configuration-properties[]
+$$utah.pricelist.loader.processor-url$$:: $$URL of Utah DABC product / price list$$ *($$String$$, default: `$$https://webapps2.abc.utah.gov/Production/OnlinePriceList/DisplayPriceList.aspx$$`)*
+$$utah.pricelist.loader.publish-topic$$:: $$Topic on which to publish all products$$ *($$String$$, default: `$$product/utah/all$$`)*
+//end::configuration-properties[]
 
 == Build
 
@@ -40,7 +47,7 @@ $ ./mvnw clean package
 == Examples
 
 ```
-
+java -jar utah-pricelist-loader-processor-solace-0.0.1.BUILD-SNAPSHOT.jar --solace.java.host=192.168.65.3 --solace.java.msgVpn=default --solace.java.clientUsername=default --solace.java.clientPassword=default --spring.cloud.stream.bindings.input.destination=utah.pricelist.loader --spring.cloud.stream.bindings.input.group=group --spring.cloud.stream.solace.bindings.input.consumer.queueAdditionalSubscriptions=trigger/c1 --spring.cloud.stream.bindings.output.destination=utah/pricelist/loader --solace.java.apiProperties.generate_sender_id=true --solace.java.apiProperties.generate_sequence_numbers=true --solace.java.apiProperties.generate_send_timestamps=true --utah.pricelist.loader.processorUrl=http://127.0.0.1:8888/test.html
 ```
 
 //end::ref-doc[]

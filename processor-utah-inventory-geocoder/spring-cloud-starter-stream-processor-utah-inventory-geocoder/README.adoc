@@ -1,29 +1,35 @@
 //tag::ref-doc[]
 = processor-utah-inventory-geocoder
 
+The `utah-inventory-geocoder` processor looks up the address associated with a given store inventory object and geocodes it using the Google Maps API.  The location field gets populated with the resulting lat/long values.  Note that you will need to acquire an API key to perform a lookup and pass it in as a value in the configuration (see example below).   
 
 == Input
 
 === Headers
 
-N/A
+* N/A
 
 === Payload
 
-* Any
+* `com.solace.demo.utahdabc.datamodel.ProductInventoryData` containing store address info.
 
 == Output
 
 === Headers
 
-N/A
+* N/A
 
 === Payload
 
-* Any
+* `ProductInventoryData.com.solace.demo.utahdabc.datamodel` with the location field populated with geocoding results.
 
 == Options
 
+The **$$utah-inventory-geocoder$$** $$processor$$ has the following options:
+
+//tag::configuration-properties[]
+$$utah.inventory.geocoder.google-maps-api-key$$:: $$Google Maps Geocoding API key$$ *($$String$$, default: `$$<none>$$`)*
+//end::configuration-properties[]
 
 == Build
 
@@ -40,7 +46,7 @@ $ ./mvnw clean package
 == Examples
 
 ```
-
+java -jar utah-inventory-geocoder-processor-solace-0.0.1.BUILD-SNAPSHOT.jar --solace.java.host=192.168.65.3 --solace.java.msgVpn=default --solace.java.clientUsername=default --solace.java.clientPassword=default --spring.cloud.stream.bindings.input.destination=inventory.geocoder --spring.cloud.stream.bindings.input.group=group --spring.cloud.stream.solace.bindings.input.consumer.queueAdditionalSubscriptions=inventory/A/W/* --spring.cloud.stream.bindings.output.destination=inventory/geocoder/out --utah.inventory.geocoder.googleMapsApiKey=<INSERT_API_KEY_HERE> --solace.java.apiProperties.generate_sender_id=true --solace.java.apiProperties.generate_sequence_numbers=true --solace.java.apiProperties.generate_send_timestamps=true
 ```
 
 //end::ref-doc[]

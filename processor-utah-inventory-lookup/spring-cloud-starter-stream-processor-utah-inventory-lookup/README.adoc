@@ -1,29 +1,36 @@
 //tag::ref-doc[]
 = processor-utah-inventory-lookup
 
+The `utah-inventory-lookup` processor performs a lookup against the Utah DABC site for a given product and finds all stores and inventory levels for that product, then publishes each combination thereof. 
 
 == Input
 
 === Headers
 
-N/A
+* N/A
 
 === Payload
 
-* Any
+* `com.solace.demo.utahdabc.datamodel.Product` (Utah DABC) on which to perform an inventory lookup 
 
 == Output
 
 === Headers
 
-N/A
+* N/A
 
 === Payload
 
-* Any
+* `com.solace.demo.utahdabc.datamodel.StoreInventory` with product, quantity, store / address, etc.  Note that the processor only returns the top store inventory (with the max product count) via the output channel (1:1 mapping for each product input).  The full list of inventories by store is published to a dynamically determined inventory topic containing the category info (mirroring categorized product topic schemes).  
 
 == Options
 
+The **$$utah-inventory-lookup$$** $$processor$$ has the following options:
+
+//tag::configuration-properties[]
+$$utah.inventory.lookup.inventory-query-url$$:: $$URL used to perform the lookup for a Utah DABC product$$ *($$String$$, default: `$$https://webapps2.abc.utah.gov/Production/OnlineInventoryQuery/IQ/InventoryQuery.aspx$$`)*
+$$utah.inventory.lookup.publish-topic-prefix$$:: $$Topic prefix on which to publish inventory info about the product, store and quantity (and additional details)$$ *($$String$$, default: `$$inventory/$$`)*
+//end::configuration-properties[]
 
 == Build
 
@@ -40,7 +47,7 @@ $ ./mvnw clean package
 == Examples
 
 ```
-
+java -jar utah-inventory-lookup-processor-solace-0.0.1.BUILD-SNAPSHOT.jar --solace.java.host=192.168.65.3 --solace.java.msgVpn=default --solace.java.clientUsername=default --solace.java.clientPassword=default --spring.cloud.stream.bindings.input.destination=inventory.lookup --spring.cloud.stream.bindings.input.group=group --spring.cloud.stream.solace.bindings.input.consumer.queueAdditionalSubscriptions=product/A/W/* --spring.cloud.stream.bindings.output.destination=inventory/lookup/out --solace.java.apiProperties.generate_sender_id=true --solace.java.apiProperties.generate_sequence_numbers=true --solace.java.apiProperties.generate_send_timestamps=true
 ```
 
 //end::ref-doc[]

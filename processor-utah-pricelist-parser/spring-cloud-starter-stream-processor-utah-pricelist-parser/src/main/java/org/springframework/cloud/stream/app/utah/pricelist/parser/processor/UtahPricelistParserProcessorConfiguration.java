@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * SCS processor - pricelist parser - splits an HTML pricelist into individual products and outputs as JSON or a user-defined content type.
+ * See README.adoc 
  *
  * @author Solace Corp
  */

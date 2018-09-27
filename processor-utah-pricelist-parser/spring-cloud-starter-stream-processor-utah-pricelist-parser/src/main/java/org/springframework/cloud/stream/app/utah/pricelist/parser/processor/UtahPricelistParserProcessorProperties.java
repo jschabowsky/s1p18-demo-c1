@@ -8,7 +8,7 @@ package org.springframework.cloud.stream.app.utah.pricelist.parser.processor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * Configuration properties for the pricelist parser processor.
+ * Configuration properties for UtahPricelistParserProcessorConfiguration
  *
  * @author Solace Corp.
  */
@@ -16,6 +16,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class UtahPricelistParserProcessorProperties {
 	public static final String DEFAULT_PUBLISH_TOPIC_PREFIX = "product/";
 
+	/**
+	 * Topic prefix to use when publishing categorized products
+	 */
 	private String publishTopicPrefix = DEFAULT_PUBLISH_TOPIC_PREFIX;
 
 	public String getPublishTopicPrefix() {

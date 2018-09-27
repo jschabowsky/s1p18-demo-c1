@@ -40,7 +40,7 @@ import com.solace.demo.utahdabc.datamodel.ProductInventoryData;
 import com.solace.demo.utahdabc.datamodel.StoreInventory;
 
 /**
- * SCS processor - geocoder.  Looks up an address (could be cached) associated with a product in a store, and sets lat/long
+ * See README.adoc
  *
  * @author Solace Corp
  */

@@ -35,7 +35,7 @@ import com.solace.demo.utahdabc.datamodel.ProductInventoryData;
 import com.solace.demo.utahdabc.datamodel.StoreInventory;
 
 /**
- * SCS processor - lookup.  Converts an address to lat/long, or the reverse.
+ * See README.adoc
  *
  * @author Solace Corp
  */

@@ -8,12 +8,15 @@ package org.springframework.cloud.stream.app.utah.inventory.geocoder.processor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * Configuration properties for the inventory geocoder processor.
+ * Configuration properties for UtahInventoryGeocoderProcessorConfiguration
  *
  * @author Solace Corp.
  */
 @ConfigurationProperties("utah.inventory.geocoder")
 public class UtahInventoryGeocoderProcessorProperties {
+	/**
+	 * Google Maps Geocoding API key
+	 */
 	private String googleMapsApiKey;
 
 	public String getGoogleMapsApiKey() {
